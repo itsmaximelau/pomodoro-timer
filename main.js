@@ -1,10 +1,10 @@
 //Initial time values
 var initialWorkMinutes = 0;
-var initialWorkSeconds = 1;
+var initialWorkSeconds = 5;
 var initialPauseMinutes = 0;
-var initialPauseSeconds = 1;
+var initialPauseSeconds = 4;
 var initialLongPauseMinutes = 0;
-var initialLongPauseSeconds = 1;
+var initialLongPauseSeconds = 10;
 
 // Current time value
 var minutes = initialWorkMinutes;
@@ -31,24 +31,33 @@ var timerInstance;
 //HTML IDs
 var timer = document.getElementById("timer");
 var pomodoroString = document.getElementById("pomodoroCount");
+var pomodoroState = document.getElementById("pomodoroState");
+
 
 //Function to enable timer, bounded to HTML button start/pause
 function enableTimer(){
+    //PAUSE
     if (timerRunning == true){
         timerRunning = false;
         clearInterval(timerInstance);
+        pomodoroState.innerHTML = "Timer paused";
     }
+    //START
     else {
         timerRunning = true;
         timerInstance = setInterval(runTimer,1000);
+        workStateMessageCheckup();
     }
 }
 
 //Function to disable timer (reset), bounded to HTML button stop
+
 function disableTimer(){
+    //STOP
     clearInterval(timerInstance);
     resetTimer();
     resetPomodoroCount();
+    pomodoroState.innerHTML = "Waiting to start...";
 }
 
 //Function to reset timer value to initial values (hardcoded in variable section)
@@ -94,6 +103,7 @@ function timeOver(){
             workState = false;
             setLongPauseTimer();
             updatePomodoroCount();
+            workStateMessageCheckup();
             
         }
         else {
@@ -102,6 +112,7 @@ function timeOver(){
             workState = false;
             setPauseTimer();
             updatePomodoroCount();
+            workStateMessageCheckup();
         }
     }
 
@@ -110,12 +121,14 @@ function timeOver(){
             playSound();
             console.log("Resetting everything");
             disableTimer();
+            "Waiting to start...";
         }
         else{
             playSound();
             console.log("Time to work.")
             workState = true;
             setWorkTimer();
+            workStateMessageCheckup();
         }
     }
 }
@@ -153,9 +166,18 @@ function setWorkTimer(){
 function loadVariables(){
     resetTimer();
     pomodoroString.innerHTML = "Count = " + pomodoroCount + "/" + maximumPomodoros;
+    pomodoroState.innerHTML = "Waiting to start...";
 }
 
 function playSound() {
-    const audio = new Audio("/resources/alert.mp3");
-    audio.play();
+    document.getElementById("audio").play();
   }
+
+function workStateMessageCheckup(){
+    if (workState == true){
+        pomodoroState.innerHTML = "Time to work ;)";
+    }
+    else if (workState == false){
+        pomodoroState.innerHTML = "Time to relax ! :D";
+    }
+}
