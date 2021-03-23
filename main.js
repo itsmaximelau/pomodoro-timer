@@ -89,6 +89,7 @@ function timeOver(){
     console.log("DING!");
     if (workState == true){
         if (pomodoroCount == maximumPomodoros-1){
+            playSound();
             console.log("Time for a long break.")
             workState = false;
             setLongPauseTimer();
@@ -96,6 +97,7 @@ function timeOver(){
             
         }
         else {
+            playSound();
             console.log("Time for a break.")
             workState = false;
             setPauseTimer();
@@ -105,10 +107,12 @@ function timeOver(){
 
     else if (workState == false){
         if (pomodoroCount == maximumPomodoros){
+            playSound();
             console.log("Resetting everything");
             disableTimer();
         }
         else{
+            playSound();
             console.log("Time to work.")
             workState = true;
             setWorkTimer();
@@ -150,3 +154,8 @@ function loadVariables(){
     resetTimer();
     pomodoroString.innerHTML = "Count = " + pomodoroCount + "/" + maximumPomodoros;
 }
+
+function playSound() {
+    const audio = new Audio("/resources/alert.mp3");
+    audio.play();
+  }
