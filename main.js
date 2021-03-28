@@ -1,17 +1,22 @@
 //Initial time values
-var initialWorkMinutes = 25;
-var initialWorkSeconds = 0;
-var initialPauseMinutes = 5;
-var initialPauseSeconds = 0;
-var initialLongPauseMinutes = 15;
-var initialLongPauseSeconds = 0;
+var initialWork = 25*60+0;
+var initialPause = 5*60+0;
+var initialLongPause = 10*60+0;
+var startTime;
+var currentTimerSeconds = initialWork;
+var elapsedTimeSeconds;
+var pausedTime = 0;
+var pauseBegin;
+var pauseEnd;
+var timerInit = false;
 
 // Current time value
-var minutes = initialWorkMinutes;
-var seconds = initialWorkSeconds;
+var seconds = initialWork % 60;
+var minutes = (initialWork-seconds)/60;
 
 // Pomodoro state
 var workState = true;
+var pauseButtonOn = false;
 
 // Current pomodoroCount
 var pomodoroCount = 0;
@@ -37,14 +42,22 @@ var pomodoroState = document.getElementById("pomodoroState");
 function enableTimer(){
     //PAUSE
     if (timerRunning == true){
+        pauseButtonCalculation();
         timerRunning = false;
         clearInterval(timerInstance);
         pomodoroState.innerHTML = "TIMER PAUSED";
     }
     //START
     else {
+        if (timerInit == false){
+            startTime = Date.now();
+            timerInit = true;
+        }
+        if (pauseButtonOn == true){
+            pauseButtonCalculation();
+        }
         timerRunning = true;
-        timerInstance = setInterval(runTimer,1000);
+        timerInstance = setInterval(runTimer,100);
         workStateMessageCheckup();
     }
 }
@@ -55,7 +68,21 @@ function disableTimer(){
     clearInterval(timerInstance);
     resetTimer();
     resetPomodoroCount();
+    timerInit = false;
     pomodoroState.innerHTML = "WAITING TO START...";
+}
+
+function pauseButtonCalculation(){
+    if (pauseButtonOn == false){
+        pauseButtonOn = true;
+        pauseBegin = Date.now();
+    }
+    else if (pauseButtonOn == true){
+        pauseButtonOn = false;
+        pauseEnd = Date.now();
+        pausedTime = pausedTime + Math.floor((pauseEnd-pauseBegin)/1000);
+        console.log(pausedTime)
+    }
 }
 
 //Function to reset timer value to initial values (hardcoded in variable section)
@@ -75,21 +102,19 @@ function runTimer(){
 
 //Function to calculate time format (when 60 seconds passes, a minute has passed)
 function timeCalculation(){
-    if (seconds==0){
-        //This means timer has ran out.
-        if (minutes ==0){
+    elapsedTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+    var remainingSeconds = currentTimerSeconds-elapsedTimeSeconds+pausedTime;
+
+    console.log(elapsedTimeSeconds);
+    console.log(remainingSeconds)
+
+    seconds = remainingSeconds % 60;
+    minutes = (remainingSeconds-seconds)/60;
+
+    //This means time has ran out.
+    if (remainingSeconds==0){
             timeOver();
         }
-        //This means it's time to decrement minutes and increment seconds back to 59.
-        else {
-            minutes = minutes-1;
-            seconds = 59;
-        }
-    }
-    //This means only seconds needs to be decremented.
-    else {
-        seconds = seconds - 1;
-    }
 }
 
 //Function to deal with state changes (work/short break/long break)
@@ -153,20 +178,26 @@ function resetPomodoroCount(){
 
 //Function to set time according to short pause timer settings.
 function setPauseTimer(){
-    minutes = initialPauseMinutes;
-    seconds = initialPauseSeconds;
+    startTime = Date.now();
+    currentTimerSeconds = initialPause;
+    seconds = initialPause % 60;
+    minutes = (initialPause-seconds)/60;;
 }
 
 //Function to set time according to long pause timer settings.
 function setLongPauseTimer(){
-    minutes = initialLongPauseMinutes;
-    seconds = initialLongPauseSeconds;
+    startTime = Date.now();
+    currentTimerSeconds = initialLongPause;
+    seconds = initialLongPause % 60;
+    minutes = (initialLongPause-seconds)/60;;
 }
 
 //Function to set time according to work timer settings.
 function setWorkTimer(){
-    minutes = initialWorkMinutes;
-    seconds = initialWorkSeconds;
+    startTime = Date.now();
+    currentTimerSeconds = initialWork;
+    seconds = initialWork % 60;
+    minutes = (initialWork-seconds)/60;
 }
 
 //Function to load variables on page load.
