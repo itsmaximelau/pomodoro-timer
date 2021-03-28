@@ -81,7 +81,6 @@ function pauseButtonCalculation(){
         pauseButtonOn = false;
         pauseEnd = Date.now();
         pausedTime = pausedTime + Math.floor((pauseEnd-pauseBegin)/1000);
-        console.log(pausedTime)
     }
 }
 
@@ -105,9 +104,6 @@ function timeCalculation(){
     elapsedTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
     var remainingSeconds = currentTimerSeconds-elapsedTimeSeconds+pausedTime;
 
-    console.log(elapsedTimeSeconds);
-    console.log(remainingSeconds)
-
     seconds = remainingSeconds % 60;
     minutes = (remainingSeconds-seconds)/60;
 
@@ -123,7 +119,6 @@ function timeOver(){
         //Long break
         if (pomodoroCount == maximumPomodoros-1){
             playSound();
-            console.log("TIME FOR A LONG BREAK !")
             workState = false;
             setLongPauseTimer();
             updatePomodoroCount();
@@ -133,7 +128,6 @@ function timeOver(){
         //Short break
         else {
             playSound();
-            console.log("TIME FOR A BREAK !")
             workState = false;
             setPauseTimer();
             updatePomodoroCount();
