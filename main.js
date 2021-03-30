@@ -108,7 +108,7 @@ function timeCalculation(){
     minutes = (remainingSeconds-seconds)/60;
 
     //This means time has ran out.
-    if (remainingSeconds==0){
+    if (remainingSeconds <= 0){
             timeOver();
         }
 }
