@@ -1,7 +1,7 @@
 # pomodoro-timer
 
 ## Description
-<b> pomodoro-timer </b> is a productivity/time management tool. This is a timer that respects the Pomodoro technique, which consists of working and taking breaks at regular intervals (4 intervals of 20-25 minutes of work for 5 minutes of break followed by a long break).
+<b> Pomodoro-timer </b> is a productivity/time management tool. This is a timer that respects the Pomodoro technique, which consists of working and taking breaks at regular intervals (4 intervals of 20-25 minutes of work for 5 minutes of break followed by a long break).
 
 ## What have I learned ?
 - HTML
